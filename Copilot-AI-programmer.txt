@@ -1,0 +1,9 @@
+I want to test the GitHub copilot (https://copilot.github.com/, https://github.com/features/copilot/signup).
+I am not a Visual Studio user, I can't use it.
+However, I am interested in it. I checked some youtube videos explaining it.
+
+How well does Copilot handle scripting in Python, Nodejs, and Bash?
+https://www.youtube.com/watch?v=F5IAZs8QklY
+
+The result is impressive. The AI copilot can suggest codes and comments from just a small chunk of words.
+Obviously, it is not for a beginner but for a programmer who has already the experience to revise and check the code.
