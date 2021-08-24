@@ -54,5 +54,5 @@ solutions = [g for g in grids if _all_sums(g)]
 print("solutions = ")
 print_solutions(solutions)
 
-#print("num grids (9!)=",len(list(grids)))
+print("num grids (9!)=",len(list(grids)))
 
