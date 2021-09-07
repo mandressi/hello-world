@@ -90,6 +90,9 @@ class Board:
       [[SPACE for i in range(8)] for j in range(8)]
     self.turn = BLACK  # 手番
     self.move_num = 1  # 手数
+
+    self.previous_board = copy.deepcopy(self.board)
+    self.previous_boards = []
   
   # 盤面の初期化（初期配置）
   def init_board(self):
@@ -156,6 +159,8 @@ class Board:
   # 局面を進める
   def move(self, position):
     # 石を打つ
+    self.previous_board = copy.deepcopy(self.board)
+    self.previous_boards.append(self.previous_board)
     self.board[position.y][position.x] = self.turn
     
     # 石をひっくり返す
@@ -187,39 +192,15 @@ class Board:
     
     self.turn = -self.turn  # 手番を変更
     self.move_num += 1    # 手数を増やす
+    
   
   # 局面を進める
   def undo_move(self, position):
-    # 石を打つ
-    #self.turn = -self.turn  # 手番を変更
-    self.board[position.y][position.x] = self.turn
-    print("position turn:",self.turn)
-    # 石をひっくり返す
-    # 各方向に石をひっくり返せるか調べる
-    for dir in Board.DIR:
-      y = position.y + dir[0]
-      x = position.x + dir[1]
-      if y >= 0 and x >= 0 and y < 8 and x < 8 \
-        and self.board[y][x] == -self.turn:
-        # 隣が相手の石
-        y += dir[0]
-        x += dir[1]
-        while y >= 0 and x >= 0 and y < 8 and \
-          x < 8 and self.board[y][x] == -self.turn:
-          y += dir[0]
-          x += dir[1]
-        if y >= 0 and x >= 0 and y < 8 and x < 8 \
-          and self.board[y][x] == self.turn:
-          # この方向は返せる
-          # 1マス戻る
-          y -= dir[0]
-          x -= dir[1]
-          # 戻りながら返す
-          while y >= 0 and x >= 0 and y < 8 and \
-            x < 8 and self.board[y][x]== -self.turn:
-            self.board[y][x] = self.turn
-            y -= dir[0]
-            x -= dir[1]
+
+    if self.previous_boards == []:
+      pass
+    self.previous_board = self.previous_boards.pop()
+    self.board = copy.deepcopy(self.previous_board)
     
     self.turn = -self.turn  # 手番を変更
     self.move_num -= 1    # 手数を減らす
@@ -570,34 +551,35 @@ def play_undo():
   # ○ 0:プレイヤー 1:コンピュータ
   white_player = white_var.get()  
 
-  last_move = history[-1]
-  history = history[:-1]
-  move_index = parse_square(last_move)
-  if move_index < 8: 
-      position = Position(move_index, 0)
-  elif move_index >= 8 and move_index < 16 :
-      position = Position(move_index - 8, 1)
-  elif move_index >= 16 and move_index < 24 :
-      position = Position(move_index - 8*2, 2)
-  elif move_index >= 24 and move_index < 32 :
-      position = Position(move_index - 8*3, 3)
-  elif move_index >= 32 and move_index < 40 :
-      position = Position(move_index - 8*4, 4)
-  elif move_index >= 40 and move_index < 48 :
-      position = Position(move_index - 8*5, 5)
-  elif move_index >= 48 and move_index < 56 :
-      position = Position(move_index - 8*6, 6)
-  elif move_index >= 56 and move_index < 64 :
-      position = Position(move_index - 8*7, 7)
-  new_pos = (position.y,position.x)
-  print("new_pos: ",new_pos, new_pos[0],new_pos[1])
-  inv_position = Position(new_pos[1],new_pos[0])
-  print("Undo move:", last_move, "position (x,y): ", inv_position.x,inv_position.y)
-  game.board.board[inv_position.y][inv_position.x] = SPACE
-  game.game_undo_move(inv_position)
-  print("after undo, history =", history)
+  if history != []:
+    last_move = history.pop()
+    #history = history[:-1]
+    move_index = parse_square(last_move)
+    if move_index < 8: 
+        position = Position(move_index, 0)
+    elif move_index >= 8 and move_index < 16 :
+        position = Position(move_index - 8, 1)
+    elif move_index >= 16 and move_index < 24 :
+        position = Position(move_index - 8*2, 2)
+    elif move_index >= 24 and move_index < 32 :
+        position = Position(move_index - 8*3, 3)
+    elif move_index >= 32 and move_index < 40 :
+        position = Position(move_index - 8*4, 4)
+    elif move_index >= 40 and move_index < 48 :
+        position = Position(move_index - 8*5, 5)
+    elif move_index >= 48 and move_index < 56 :
+        position = Position(move_index - 8*6, 6)
+    elif move_index >= 56 and move_index < 64 :
+        position = Position(move_index - 8*7, 7)
+    new_pos = (position.y,position.x)
+    print("new_pos: ",new_pos, new_pos[0],new_pos[1])
+    inv_position = Position(new_pos[1],new_pos[0])
+    print("Undo move:", last_move, "position (x,y): ", inv_position.x,inv_position.y)
+    game.board.board[inv_position.y][inv_position.x] = SPACE
+    game.game_undo_move(inv_position)
+    print("after undo, history =", history)
 
-  game.proc_com_turn()
+    game.proc_com_turn()
 
 
 
