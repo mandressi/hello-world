@@ -20,7 +20,7 @@ WHITE = -1  # 白石
 BOARD_PX_SIZE = 500          # 盤面のサイズ
 CELL_PX_SIZE = BOARD_PX_SIZE / 8  # マスのサイズ
 
-AI_LEVEL = 4  # AIが読む深さ
+AI_LEVEL = 5 #4  # AIが読む深さ
 
 # ------------------------
 # マスの座標を管理するクラス
